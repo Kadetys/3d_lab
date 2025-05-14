@@ -52,21 +52,25 @@ double coords_clone[19][3] = {
     {320, 300, 1}
 };
 
-double matrix_umensh[3][3] = {
+double matrix_x[3][3] = {
     {0.4, 0, 0},
     {0,   1, 0},
     {0,   0, 1}
 };
-double matrix_uvelich[3][3] = {
+
+double matrix_y[3][3] = {
     {1, 0, 0},
     {0, 1.5, 0},
     {0, 0, 1}
+    
 };
-double matrix_zercal[3][3] = {
+
+double matrix_x_to_y[3][3] = {
     {0, 1, 0},
     {1, 0, 0},
     {0, 0, 1}
 };
+
 
 
 
@@ -179,40 +183,49 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 }
 
 // уменьшение X
-void umensh_x(double cords[][3], double matum[][3]) {
+
+void matrix_reset() {
+    for (int i = 0; i != 19; i++) {
+        for (int j = 0; j != 3; j++) {
+            coords_clone[i][j] = coords[i][j];
+        }
+    }
+}
+
+void mult_matrix(double cords[][3], double matum[][3]) {
     double vrem[3] = { 0, 0, 0 };
     for (int i = 0; i != 19; i++) {
-        vrem[0] = cords[i][0] * matum[0][0] + cords[i][1] * matum[0][1] + cords[i][2] * matum[0][2];
-        vrem[1] = cords[i][0] * matum[1][0] + cords[i][1] * matum[1][1] + cords[i][2] * matum[1][2];
-        vrem[2] = cords[i][0] * matum[2][0] + cords[i][1] * matum[2][1] + cords[i][2] * matum[2][2];
+        vrem[0] = cords[i][0] * matum[0][0] + cords[i][1] * matum[1][0] + cords[i][2] * matum[2][0];
+        vrem[1] = cords[i][0] * matum[0][1] + cords[i][1] * matum[1][1] + cords[i][2] * matum[2][1];
+        vrem[2] = cords[i][0] * matum[0][2] + cords[i][1] * matum[1][2] + cords[i][2] * matum[2][2];
         cords[i][0] = vrem[0];
         cords[i][1] = vrem[1];
         cords[i][2] = vrem[2];
     }
 }
-// увеличение Y
-void uvelich_y(double cords[][3], double matum[][3]) {
-    double vrem[3] = {0, 0, 0};
-    for (int i = 0; i != 19; i++) {
-        vrem[0] = cords[i][0] * matum[0][0] + cords[i][1] * matum[0][1] + cords[i][2] * matum[0][2];
-        vrem[1] = cords[i][0] * matum[0][0] + cords[i][1] * matum[0][1] + cords[i][2] * matum[0][2];
-        vrem[2] = cords[i][0] * matum[0][0] + cords[i][1] * matum[0][1] + cords[i][2] * matum[0][2];
-        cords[i][0] = vrem[0];
-        cords[i][1] = vrem[1];
-        cords[i][2] = vrem[2];
-    }
-}
-void zercalo(double cords[][3], double matum[][3]) {
-    double vrem[3] = { 0, 0, 0 };
-    for (int i = 0; i != 19; i++) {
-        vrem[0] = cords[i][0] * matum[0][0] + cords[i][1] * matum[0][1] + cords[i][2] * matum[0][2];
-        vrem[1] = cords[i][0] * matum[0][0] + cords[i][1] * matum[0][1] + cords[i][2] * matum[0][2];
-        vrem[2] = cords[i][0] * matum[0][0] + cords[i][1] * matum[0][1] + cords[i][2] * matum[0][2];
-        cords[i][0] = vrem[0];
-        cords[i][1] = vrem[1];
-        cords[i][2] = vrem[2];
-    }
-}
+//// увеличение Y
+//void uvelich_y(double cords[][3], double matum[][3]) {
+//    double vrem[3] = {0, 0, 0};
+//    for (int i = 0; i != 19; i++) {
+//        vrem[0] = cords[i][0] * matum[0][0] + cords[i][1] * matum[1][0] + cords[i][2] * matum[2][0];
+//        vrem[1] = cords[i][0] * matum[1][0] + cords[i][1] * matum[1][1] + cords[i][2] * matum[2][1];
+//        vrem[2] = cords[i][0] * matum[2][0] + cords[i][1] * matum[2][2] + cords[i][2] * matum[2][2];
+//        cords[i][0] = vrem[0];
+//        cords[i][1] = vrem[1];
+//        cords[i][2] = vrem[2];
+//    }
+//}
+//void zercalo(double cords[][3], double matum[][3]) {
+//    double vrem[3] = { 0, 0, 0 };
+//    for (int i = 0; i != 19; i++) {
+//        vrem[0] = cords[i][0] * matum[0][0] + cords[i][1] * matum[1][0] + cords[i][2] * matum[2][0];
+//        vrem[1] = cords[i][0] * matum[1][0] + cords[i][1] * matum[1][1] + cords[i][2] * matum[2][1];
+//        vrem[2] = cords[i][0] * matum[2][0] + cords[i][1] * matum[2][2] + cords[i][2] * matum[2][2];
+//        cords[i][0] = vrem[0];
+//        cords[i][1] = vrem[1];
+//        cords[i][2] = vrem[2];
+//    }
+//}
 
 void draw(double start_coord[][3], HDC hdc)
 {
@@ -258,6 +271,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case IDM_ABOUT:
             DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
             break;
+        case x_preobr:
+            mult_matrix(coords_clone, matrix_x);
+            InvalidateRect(hWnd, NULL, TRUE);
+            UpdateWindow(hWnd);
+            break;
+
+        case y_preobr:
+            mult_matrix(coords_clone, matrix_y);
+            InvalidateRect(hWnd, NULL, TRUE);
+            UpdateWindow(hWnd);
+            break;
+
+        case x_to_y:
+            mult_matrix(coords_clone, matrix_x_to_y);
+            InvalidateRect(hWnd, NULL, TRUE);
+            UpdateWindow(hWnd);
+            break;
+
+        case reset:
+            matrix_reset();
+            InvalidateRect(hWnd, NULL, TRUE);
+            UpdateWindow(hWnd);
+            break;
+
         case IDM_EXIT:
             DestroyWindow(hWnd);
             break;
@@ -272,9 +309,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // TODO: Добавьте сюда любой код прорисовки, использующий HDC...
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
-        umensh_x(coords_clone, matrix_umensh);
-        uvelich_y(coords_clone, matrix_uvelich);
-        zercalo(coords_clone, matrix_zercal);
         draw(coords_clone, hdc);
 
         EndPaint(hWnd, &ps);
