@@ -7,7 +7,7 @@
 #include <cmath>
 double pi = 2 * asin(1.0);
 
-double corner = 180 * (pi / 180);
+double corner = pi;
 
 const double coords[19][3] = {
     {200, 200, 1 },
@@ -85,7 +85,7 @@ double matrix_rotate[3][3] = {
 double go_home_matrix[3][3] = {
     { 1, 0, 0 },
     { 0, 1, 0 },
-    { 0, -600, 1 }
+    { 600, 600, 1 }
 };
 
 
@@ -214,9 +214,9 @@ void mult_matrix(double cords[][3], double matum[][3]) {
         vrem[0] = cords[i][0] * matum[0][0] + cords[i][1] * matum[1][0] + cords[i][2] * matum[2][0];
         vrem[1] = cords[i][0] * matum[0][1] + cords[i][1] * matum[1][1] + cords[i][2] * matum[2][1];
         vrem[2] = cords[i][0] * matum[0][2] + cords[i][1] * matum[1][2] + cords[i][2] * matum[2][2];
-        cords[i][0] = abs(vrem[0]);
-        cords[i][1] = abs(vrem[1]);
-        cords[i][1] = abs(vrem[2]);
+        cords[i][0] = vrem[0];
+        cords[i][1] = vrem[1];
+        cords[i][2] = vrem[2];
     }
 }
 
@@ -285,18 +285,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         case rotate:
             mult_matrix(coords_clone, matrix_rotate);
+            mult_matrix(coords_clone, go_home_matrix);
             InvalidateRect(hWnd, NULL, TRUE);
             UpdateWindow(hWnd);
             break;
 
         case reset:
             matrix_reset();
-            InvalidateRect(hWnd, NULL, TRUE);
-            UpdateWindow(hWnd);
-            break;
-
-        case go_home:
-            mult_matrix(coords_clone, go_home_matrix);
             InvalidateRect(hWnd, NULL, TRUE);
             UpdateWindow(hWnd);
             break;
