@@ -4,6 +4,11 @@
 #include "framework.h"
 #include "3d_lab1.h"
 #include <math.h>
+#include <cmath>
+double pi = 2 * asin(1.0);
+
+double corner = 180 * (pi / 180);
+
 const double coords[19][3] = {
     {200, 200, 1 },
     {200, 400, 1},
@@ -66,10 +71,23 @@ double matrix_y[3][3] = {
 };
 
 double matrix_x_to_y[3][3] = {
-    {0, 1, 0},
-    {1, 0, 0},
-    {0, 0, 1}
+    { 0, 1, 0 },
+    { 1, 0, 0 },
+    { 0, 0, 1 }
 };
+
+double matrix_rotate[3][3] = {
+    { cos (corner), sin(corner), 0},
+    { - sin (corner), cos(corner), 0},
+    { 0, 0, 1 }
+};
+
+double go_home_matrix[3][3] = {
+    { 1, 0, 0 },
+    { 0, 1, 0 },
+    { 0, -600, 1 }
+};
+
 
 
 
@@ -182,8 +200,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
-// уменьшение X
-
 void matrix_reset() {
     for (int i = 0; i != 19; i++) {
         for (int j = 0; j != 3; j++) {
@@ -198,34 +214,12 @@ void mult_matrix(double cords[][3], double matum[][3]) {
         vrem[0] = cords[i][0] * matum[0][0] + cords[i][1] * matum[1][0] + cords[i][2] * matum[2][0];
         vrem[1] = cords[i][0] * matum[0][1] + cords[i][1] * matum[1][1] + cords[i][2] * matum[2][1];
         vrem[2] = cords[i][0] * matum[0][2] + cords[i][1] * matum[1][2] + cords[i][2] * matum[2][2];
-        cords[i][0] = vrem[0];
-        cords[i][1] = vrem[1];
-        cords[i][2] = vrem[2];
+        cords[i][0] = abs(vrem[0]);
+        cords[i][1] = abs(vrem[1]);
+        cords[i][1] = abs(vrem[2]);
     }
 }
-//// увеличение Y
-//void uvelich_y(double cords[][3], double matum[][3]) {
-//    double vrem[3] = {0, 0, 0};
-//    for (int i = 0; i != 19; i++) {
-//        vrem[0] = cords[i][0] * matum[0][0] + cords[i][1] * matum[1][0] + cords[i][2] * matum[2][0];
-//        vrem[1] = cords[i][0] * matum[1][0] + cords[i][1] * matum[1][1] + cords[i][2] * matum[2][1];
-//        vrem[2] = cords[i][0] * matum[2][0] + cords[i][1] * matum[2][2] + cords[i][2] * matum[2][2];
-//        cords[i][0] = vrem[0];
-//        cords[i][1] = vrem[1];
-//        cords[i][2] = vrem[2];
-//    }
-//}
-//void zercalo(double cords[][3], double matum[][3]) {
-//    double vrem[3] = { 0, 0, 0 };
-//    for (int i = 0; i != 19; i++) {
-//        vrem[0] = cords[i][0] * matum[0][0] + cords[i][1] * matum[1][0] + cords[i][2] * matum[2][0];
-//        vrem[1] = cords[i][0] * matum[1][0] + cords[i][1] * matum[1][1] + cords[i][2] * matum[2][1];
-//        vrem[2] = cords[i][0] * matum[2][0] + cords[i][1] * matum[2][2] + cords[i][2] * matum[2][2];
-//        cords[i][0] = vrem[0];
-//        cords[i][1] = vrem[1];
-//        cords[i][2] = vrem[2];
-//    }
-//}
+
 
 void draw(double start_coord[][3], HDC hdc)
 {
@@ -289,8 +283,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             UpdateWindow(hWnd);
             break;
 
+        case rotate:
+            mult_matrix(coords_clone, matrix_rotate);
+            InvalidateRect(hWnd, NULL, TRUE);
+            UpdateWindow(hWnd);
+            break;
+
         case reset:
             matrix_reset();
+            InvalidateRect(hWnd, NULL, TRUE);
+            UpdateWindow(hWnd);
+            break;
+
+        case go_home:
+            mult_matrix(coords_clone, go_home_matrix);
             InvalidateRect(hWnd, NULL, TRUE);
             UpdateWindow(hWnd);
             break;
